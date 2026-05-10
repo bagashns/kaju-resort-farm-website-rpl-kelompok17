@@ -1,0 +1,49 @@
+# ── Dependensi ────────────────────────────────────────────
+node_modules/
+
+# ── File Rahasia & Konfigurasi Lingkungan ─────────────────
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+
+# ── Database Lokal ────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Upload Pengguna (file hasil upload) ───────────────────
+public/uploads/products/*
+public/uploads/payments/*
+!public/uploads/products/.gitkeep
+!public/uploads/payments/.gitkeep
+
+# ── Log & Debug ───────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# ── Cache & Build ─────────────────────────────────────────
+.cache/
+dist/
+build/
+.temp/
+
+# ── Sistem Operasi ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editor / IDE ──────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Misc ──────────────────────────────────────────────────
+.claude/
+

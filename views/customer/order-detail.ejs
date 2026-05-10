@@ -1,0 +1,117 @@
+<%- include('../partials/header') %>
+
+<%
+  let statusColor = 'gray', statusText = order.status, statusIcon = 'fas fa-circle';
+  if (order.status === 'menunggu_pembayaran') { statusColor = 'yellow'; statusText = 'Menunggu Pembayaran'; statusIcon = 'fas fa-clock'; }
+  else if (order.status === 'menunggu_verifikasi') { statusColor = 'blue'; statusText = 'Menunggu Verifikasi Admin'; statusIcon = 'fas fa-hourglass-half'; }
+  else if (order.status === 'lunas') { statusColor = 'green'; statusText = 'Pembayaran Lunas'; statusIcon = 'fas fa-check-circle'; }
+  else if (order.status === 'diproses') { statusColor = 'indigo'; statusText = 'Sedang Diproses'; statusIcon = 'fas fa-cog'; }
+  else if (order.status === 'dikirim') { statusColor = 'purple'; statusText = 'Sedang Dikirim'; statusIcon = 'fas fa-truck'; }
+  else if (order.status === 'selesai') { statusColor = 'green'; statusText = 'Pesanan Selesai'; statusIcon = 'fas fa-check-double'; }
+  else if (order.status === 'ditolak') { statusColor = 'red'; statusText = 'Pesanan Ditolak'; statusIcon = 'fas fa-times-circle'; }
+%>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <a href="/pesanan" class="text-green-600 hover:text-green-800 mb-4 inline-block"><i class="fas fa-arrow-left mr-1"></i> Kembali</a>
+
+  <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+    <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800"><%= order.invoice_number %></h1>
+        <p class="text-gray-500"><%= new Date(order.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+      </div>
+      <span class="inline-flex items-center gap-2 bg-<%= statusColor %>-100 text-<%= statusColor %>-700 px-4 py-2 rounded-full font-semibold">
+        <i class="<%= statusIcon %>"></i><%= statusText %>
+      </span>
+    </div>
+
+    <% if (order.admin_notes) { %>
+      <div class="bg-blue-50 border border-blue-200 text-blue-700 p-4 rounded-lg mb-6">
+        <strong><i class="fas fa-info-circle mr-1"></i>Catatan Admin:</strong> <%= order.admin_notes %>
+      </div>
+    <% } %>
+
+    <h3 class="font-bold text-gray-700 mb-3">Item Pesanan</h3>
+    <div class="space-y-3 mb-6">
+      <% items.forEach(item => { %>
+        <div class="flex justify-between items-center border-b pb-3">
+          <div>
+            <p class="font-semibold text-gray-800"><%= item.product_name %></p>
+            <p class="text-sm text-gray-500"><%= item.product_category %> - <%= item.product_weight %> Kg</p>
+          </div>
+          <span class="font-bold text-green-700"><%= formatRupiah(item.price) %></span>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="flex justify-between items-center text-xl font-bold border-t pt-4">
+      <span>Total</span>
+      <span class="text-green-700"><%= formatRupiah(order.total_amount) %></span>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+    <h3 class="font-bold text-gray-700 mb-3">Alamat Pengiriman</h3>
+    <p class="text-gray-600"><%= order.shipping_address %></p>
+    <% if (order.notes) { %>
+      <h3 class="font-bold text-gray-700 mt-4 mb-2">Catatan</h3>
+      <p class="text-gray-600"><%= order.notes %></p>
+    <% } %>
+  </div>
+
+  <% if (order.status === 'menunggu_pembayaran') { %>
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <h3 class="font-bold text-gray-700 mb-4">Pembayaran</h3>
+      <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-4">
+        <p class="font-semibold text-yellow-800">Silakan selesaikan pembayaran Anda:</p>
+        <p class="text-yellow-700 mt-2">Total: <strong class="text-lg"><%= formatRupiah(order.total_amount) %></strong></p>
+      </div>
+      <% if (order.payment_token) { %>
+        <button id="pay-button" class="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition text-center inline-block">
+          <i class="fas fa-credit-card mr-2"></i>Bayar Sekarang
+        </button>
+      <% } else { %>
+        <p class="text-red-500">Token pembayaran tidak ditemukan. Silakan hubungi admin.</p>
+      <% } %>
+    </div>
+  <% } %>
+
+  <% if (order.payment_proof) { %>
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <h3 class="font-bold text-gray-700 mb-3">Bukti Pembayaran</h3>
+      <img src="<%= order.payment_proof %>" alt="Bukti Pembayaran" class="max-w-sm rounded-lg shadow">
+    </div>
+  <% } %>
+
+  <div class="mt-6 text-center">
+    <a href="https://wa.me/62895349275679?text=Halo admin, saya ingin menanyakan pesanan <%= order.invoice_number %>" target="_blank" class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition">
+      <i class="fab fa-whatsapp text-xl"></i> Hubungi Admin via WhatsApp
+    </a>
+  </div>
+</div>
+
+<% if (order.status === 'menunggu_pembayaran' && order.payment_token) { %>
+<script src="<%= isProduction ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' %>" data-client-key="<%= midtransClientKey %>"></script>
+<script>
+  document.getElementById('pay-button').onclick = function(){
+    snap.pay('<%= order.payment_token %>', {
+      onSuccess: function(result){
+        fetch('/pesanan/<%= order.invoice_number %>/sync-payment', { method: 'POST' })
+          .then(() => window.location.reload());
+      },
+      onPending: function(result){
+        fetch('/pesanan/<%= order.invoice_number %>/sync-payment', { method: 'POST' })
+          .then(() => window.location.reload());
+      },
+      onError: function(result){
+        alert('Pembayaran gagal!');
+      },
+      onClose: function(){
+        console.log('User menutup popup.');
+      }
+    });
+  };
+</script>
+<% } %>
+
+<%- include('../partials/footer') %>

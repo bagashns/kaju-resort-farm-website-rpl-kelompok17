@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>Kaju Resort Farm</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f2fbf5',
+              100: '#e1f6e8',
+              200: '#c4ecd4',
+              300: '#95dbb5',
+              400: '#5fc290',
+              500: '#3ba674',
+              600: '#2a855a',
+              700: '#236a4a',
+              800: '#1e543d',
+              900: '#194533',
+              950: '#0e271d',
+            }
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-soft': 'pulseSoft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            pulseSoft: {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: .7 },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-[#f8fafc] font-sans text-slate-800 antialiased selection:bg-brand-500 selection:text-white text-sm md:text-base">
+  <nav class="glass sticky top-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="/" class="flex items-center space-x-2 group">
+          <div class="bg-gradient-to-br from-brand-400 to-brand-600 text-white p-2 rounded-lg shadow-sm group-hover:shadow-brand-500/30 transition-all duration-300 group-hover:-translate-y-0.5">
+            <i class="fas fa-leaf text-lg"></i>
+          </div>
+          <span class="font-bold text-xl tracking-tight text-slate-800 group-hover:text-brand-600 transition-colors">Kaju Resort Farm</span>
+        </a>
+        <button id="mobile-menu-btn" class="md:hidden text-slate-600 hover:text-brand-600 text-2xl transition">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="/" class="font-medium text-slate-600 hover:text-brand-600 transition-colors relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-500 after:transition-all hover:after:w-full">Beranda</a>
+          <a href="/katalog" class="font-medium text-slate-600 hover:text-brand-600 transition-colors relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-500 after:transition-all hover:after:w-full">Katalog</a>
+          <% if (user) { %>
+            <% if (user.role === 'customer') { %>
+              <a href="/keranjang" class="text-slate-600 hover:text-brand-600 transition-colors relative group/cart">
+                <i class="fas fa-shopping-cart text-lg group-hover/cart:scale-110 transition-transform"></i>
+                <% if (cartCount > 0) { %>
+                  <span class="absolute -top-2 -right-3 bg-rose-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md animate-pulse-soft"><%= cartCount %></span>
+                <% } %>
+              </a>
+              <a href="/pesanan" class="font-medium text-slate-600 hover:text-brand-600 transition-colors relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-500 after:transition-all hover:after:w-full">Pesanan Saya</a>
+            <% } else if (user.role === 'admin') { %>
+              <a href="/admin" class="font-medium text-slate-600 hover:text-brand-600 transition-colors relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-500 after:transition-all hover:after:w-full">Dashboard Admin</a>
+            <% } %>
+            <div class="relative group">
+              <button class="flex items-center space-x-2 font-medium text-slate-700 hover:text-brand-600 transition-colors bg-slate-100/50 hover:bg-brand-50 px-3 py-2 rounded-full border border-slate-200 hover:border-brand-200">
+                <div class="w-7 h-7 rounded-full bg-gradient-to-r from-brand-500 to-brand-400 text-white flex items-center justify-center text-xs shadow-inner">
+                  <i class="fas fa-user"></i>
+                </div>
+                <span><%= user.name %></span>
+                <i class="fas fa-chevron-down text-[10px] text-slate-400"></i>
+              </button>
+              <div class="absolute right-0 top-full pt-2 w-56 hidden group-hover:block z-50">
+                <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden py-2 transform transition-all">
+                  <div class="px-5 py-3 border-b border-slate-50 bg-slate-50/50">
+                    <span class="block text-sm font-semibold text-slate-800 truncate"><%= user.name %></span>
+                    <span class="block text-xs text-slate-500 truncate mt-0.5"><%= user.email %></span>
+                  </div>
+                  <a href="/logout" class="flex items-center px-5 py-3 text-sm text-rose-600 hover:bg-rose-50 transition-colors font-medium">
+                    <i class="fas fa-sign-out-alt w-5 mr-2"></i>Keluar
+                  </a>
+                </div>
+              </div>
+            </div>
+          <% } else { %>
+            <a href="/login" class="font-medium text-slate-600 hover:text-brand-600 transition-colors">Masuk</a>
+            <a href="/register" class="bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 font-medium px-6 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5">Daftar</a>
+          <% } %>
+        </div>
+      </div>
+      <div id="mobile-menu" class="md:hidden hidden pb-6 space-y-1 bg-white/95 backdrop-blur-md absolute top-full left-0 right-0 border-b border-slate-100 shadow-xl px-4">
+        <a href="/" class="block px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-brand-50 hover:text-brand-600 transition">Beranda</a>
+        <a href="/katalog" class="block px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-brand-50 hover:text-brand-600 transition">Katalog</a>
+        <% if (user) { %>
+          <% if (user.role === 'customer') { %>
+            <a href="/keranjang" class="flex items-center justify-between px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-brand-50 hover:text-brand-600 transition">
+              <span>Keranjang</span>
+              <% if (cartCount > 0) { %><span class="bg-brand-100 text-brand-700 text-xs px-2 py-1 rounded-full"><%= cartCount %></span><% } %>
+            </a>
+            <a href="/pesanan" class="block px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-brand-50 hover:text-brand-600 transition">Pesanan Saya</a>
+          <% } else { %>
+            <a href="/admin" class="block px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-brand-50 hover:text-brand-600 transition">Dashboard Admin</a>
+          <% } %>
+          <div class="h-px bg-slate-100 my-2 mx-4"></div>
+          <a href="/logout" class="block px-4 py-3 text-rose-600 font-medium rounded-xl hover:bg-rose-50 transition">Keluar (<%= user.name %>)</a>
+        <% } else { %>
+          <div class="grid grid-cols-2 gap-3 pt-3">
+            <a href="/login" class="text-center bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium px-4 py-2.5 rounded-xl transition">Masuk</a>
+            <a href="/register" class="text-center bg-brand-600 text-white hover:bg-brand-700 shadow-md shadow-brand-500/20 font-medium px-4 py-2.5 rounded-xl transition">Daftar</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+
+  <% if (success && success.length > 0) { %>
+    <div class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4 alert-auto-close pointer-events-none">
+      <div class="bg-white/90 backdrop-blur shadow-2xl shadow-brand-500/20 border border-brand-100 rounded-2xl p-4 flex items-start gap-3">
+        <div class="bg-brand-100 text-brand-600 rounded-full p-2 flex-shrink-0">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="flex-1 pt-1">
+          <p class="font-bold text-slate-800 text-sm">Berhasil</p>
+          <p class="text-slate-600 text-sm"><%= success[0] %></p>
+        </div>
+      </div>
+    </div>
+  <% } %>
+  <% if (error && error.length > 0) { %>
+    <div class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4 alert-auto-close pointer-events-none">
+      <div class="bg-white/90 backdrop-blur shadow-2xl shadow-rose-500/20 border border-rose-100 rounded-2xl p-4 flex items-start gap-3">
+        <div class="bg-rose-100 text-rose-600 rounded-full p-2 flex-shrink-0">
+          <i class="fas fa-exclamation"></i>
+        </div>
+        <div class="flex-1 pt-1">
+          <p class="font-bold text-slate-800 text-sm">Peringatan</p>
+          <p class="text-slate-600 text-sm"><%= error[0] %></p>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <main class="w-full pb-16">

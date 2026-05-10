@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6"><i class="fas fa-shopping-cart mr-2 text-green-600"></i>Keranjang Belanja</h1>
+
+  <% if (items.length === 0) { %>
+    <div class="bg-white rounded-xl shadow-md p-12 text-center">
+      <i class="fas fa-shopping-cart text-gray-300 text-6xl mb-4"></i>
+      <h3 class="text-xl text-gray-500 mb-4">Keranjang Anda masih kosong</h3>
+      <a href="/katalog" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition inline-block">
+        <i class="fas fa-search mr-2"></i>Jelajahi Katalog
+      </a>
+    </div>
+  <% } else { %>
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-4">
+        <% items.forEach(item => { %>
+          <div class="bg-white rounded-xl shadow-md p-4 flex gap-4 items-center <%= item.status !== 'tersedia' ? 'opacity-60' : '' %>">
+            <img src="<%= item.image || '/images/default-product.jpg' %>" alt="<%= item.name %>" class="w-24 h-24 rounded-lg object-cover" onerror="this.src='/images/default-product.jpg'">
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-800"><%= item.name %></h3>
+              <p class="text-sm text-gray-500"><%= item.category_name %> - <%= item.weight %> Kg</p>
+              <% if (item.status !== 'tersedia') { %>
+                <span class="text-red-500 text-sm"><i class="fas fa-exclamation-circle"></i> Tidak tersedia</span>
+              <% } %>
+              <p class="text-green-700 font-bold mt-1"><%= formatRupiah(item.price) %></p>
+            </div>
+            <form action="/keranjang/hapus/<%= item.id %>" method="POST">
+              <button type="submit" class="text-red-500 hover:text-red-700 p-2 transition" title="Hapus">
+                <i class="fas fa-trash-alt text-lg"></i>
+              </button>
+            </form>
+          </div>
+        <% }) %>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-6 h-fit sticky top-20">
+        <h3 class="font-bold text-lg text-gray-800 mb-4">Ringkasan Pesanan</h3>
+        <div class="space-y-3 mb-4">
+          <div class="flex justify-between text-gray-600">
+            <span>Jumlah Item</span>
+            <span><%= items.filter(i => i.status === 'tersedia').length %> ternak</span>
+          </div>
+          <hr>
+          <div class="flex justify-between text-lg font-bold text-gray-800">
+            <span>Total</span>
+            <span class="text-green-700"><%= formatRupiah(total) %></span>
+          </div>
+        </div>
+        <form action="/pesanan/checkout" method="POST" class="space-y-4">
+          <div>
+            <label class="block text-gray-700 font-medium text-sm mb-1">Alamat Pengiriman/Penjemputan</label>
+            <textarea name="shipping_address" rows="3" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500"><%= user.address || '' %></textarea>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium text-sm mb-1">Catatan (opsional)</label>
+            <textarea name="notes" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500" placeholder="Catatan tambahan..."></textarea>
+          </div>
+          <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition">
+            <i class="fas fa-check mr-2"></i>Checkout
+          </button>
+        </form>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>
