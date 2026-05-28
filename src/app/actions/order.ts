@@ -189,3 +189,55 @@ export async function syncPaymentAction(invoice: string) {
     return { success: false, error: err.message || 'Gagal sinkronisasi pembayaran.' };
   }
 }
+
+export async function cancelOrderAction(orderId: number) {
+  const user = await getSession();
+  if (!user) {
+    return { success: false, error: 'Silakan login terlebih dahulu.' };
+  }
+
+  try {
+    const { data: order } = await supabase
+      .from('orders')
+      .select('status')
+      .eq('id', orderId)
+      .eq('user_id', parseInt(user.id))
+      .maybeSingle();
+
+    if (!order) {
+      return { success: false, error: 'Pesanan tidak ditemukan.' };
+    }
+
+    if (order.status !== 'menunggu_pembayaran') {
+      return { success: false, error: 'Hanya pesanan yang menunggu pembayaran yang dapat dibatalkan.' };
+    }
+
+    const { error: updateError } = await supabase
+      .from('orders')
+      .update({ status: 'ditolak', updated_at: new Date().toISOString() })
+      .eq('id', orderId);
+
+    if (updateError) {
+      return { success: false, error: 'Gagal membatalkan pesanan.' };
+    }
+
+    // Set products in order back to 'tersedia'
+    const { data: items } = await supabase
+      .from('order_items')
+      .select('product_id')
+      .eq('order_id', orderId);
+
+    if (items) {
+      for (const item of items) {
+        await supabase.from('products').update({ status: 'tersedia' }).eq('id', item.product_id);
+      }
+    }
+
+    revalidatePath('/pesanan');
+    revalidatePath(`/pesanan/${orderId}`);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Terjadi kesalahan.' };
+  }
+}
+

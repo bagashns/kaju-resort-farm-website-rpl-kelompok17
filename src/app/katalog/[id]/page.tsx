@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getSession } from '@/lib/session';
-import { addToCartAction } from '@/app/actions/cart';
+import AddToCartButton from '@/components/AddToCartButton';
 
 function formatRupiah(num: number) {
   return new Intl.NumberFormat('id-ID', {
@@ -54,11 +54,6 @@ export default async function ProductDetailPage({ params }: ProductDetailProps) 
         category_name: p.categories?.name || 'Ternak',
       }))
     : [];
-
-  const handleAddToCart = async () => {
-    'use server';
-    await addToCartAction(product.id);
-  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -139,17 +134,11 @@ export default async function ProductDetailPage({ params }: ProductDetailProps) 
           )}
 
           {product.status === 'tersedia' ? (
-            <div className="flex gap-3">
+            <div className="flex gap-3 items-start">
               {user && user.role === 'customer' ? (
-                <form action={handleAddToCart} className="flex-1">
-                  <button
-                    type="submit"
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-2xl transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer text-sm"
-                  >
-                    <i className="fas fa-cart-plus"></i>
-                    <span>Masukkan Keranjang</span>
-                  </button>
-                </form>
+                <div className="flex-1">
+                  <AddToCartButton productId={product.id} />
+                </div>
               ) : !user ? (
                 <Link
                   href="/login"

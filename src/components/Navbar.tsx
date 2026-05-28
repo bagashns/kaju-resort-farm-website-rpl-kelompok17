@@ -57,7 +57,7 @@ export default function Navbar({ user, cartCount }: NavbarProps) {
                     >
                       <i className="fas fa-shopping-cart text-lg group-hover/cart:scale-110 transition-transform"></i>
                       {cartCount > 0 && (
-                        <span className="absolute -top-2 -right-3 bg-rose-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md animate-pulse">
+                        <span className="absolute -top-2 -right-3 bg-rose-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
                           {cartCount}
                         </span>
                       )}

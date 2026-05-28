@@ -35,6 +35,8 @@ export default async function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
         {/* FontAwesome */}
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+        {/* Custom Styles */}
+        <link href="/css/style.css" rel="stylesheet" />
       </head>
       <body className="bg-[#f8fafc] text-slate-800 antialiased font-sans flex flex-col min-h-full">
         <Navbar user={user} cartCount={cartCount} />

@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getSession } from '@/lib/session';
 import PayButton from '@/components/PayButton';
-import { uploadPaymentProofAction } from '@/app/actions/order';
+import { uploadPaymentProofAction, cancelOrderAction } from '@/app/actions/order';
 
 function formatRupiah(num: number) {
   return new Intl.NumberFormat('id-ID', {
@@ -78,9 +78,14 @@ export default async function OrderDetailPage({ params }: OrderDetailProps) {
     statusIcon = 'fas fa-check-double';
   } else if (order.status === 'ditolak') {
     statusColor = 'rose';
-    statusText = 'Pesanan Ditolak';
+    statusText = 'Pesanan Dibatalkan';
     statusIcon = 'fas fa-times-circle';
   }
+
+  const handleCancelOrder = async () => {
+    'use server';
+    await cancelOrderAction(order.id);
+  };
 
   const handleUploadProof = async (formData: FormData) => {
     'use server';
@@ -171,7 +176,7 @@ export default async function OrderDetailPage({ params }: OrderDetailProps) {
 
       {order.status === 'menunggu_pembayaran' && (
         <div className="bg-white rounded-3xl border border-slate-100 shadow-xl p-6 md:p-8 mb-8">
-          <h3 className="font-bold text-slate-800 mb-4 text-sm uppercase tracking-wide">Pembayaran Snap</h3>
+          <h3 className="font-bold text-slate-800 mb-4 text-sm uppercase tracking-wide">Pembayaran</h3>
           <div className="bg-amber-50 border border-amber-100 p-5 rounded-2xl mb-6 text-sm">
             <p className="font-bold text-amber-800 mb-1">Silakan selesaikan pembayaran Anda:</p>
             <p className="text-amber-700 font-light">
@@ -182,48 +187,27 @@ export default async function OrderDetailPage({ params }: OrderDetailProps) {
             </p>
           </div>
           {order.payment_token ? (
-            <div className="flex flex-col md:flex-row gap-4 items-center">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 w-full">
               <PayButton
                 paymentToken={order.payment_token}
                 invoiceNumber={order.invoice_number}
                 isProduction={process.env.MIDTRANS_IS_PRODUCTION === 'true'}
                 clientKey={process.env.MIDTRANS_CLIENT_KEY || ''}
               />
-              <span className="text-xs text-slate-400 font-light">Atau unggah bukti transfer manual di bawah</span>
+              <form action={handleCancelOrder}>
+                <button
+                  type="submit"
+                  className="w-full md:w-auto bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 font-bold py-3.5 px-6 rounded-2xl transition duration-300 text-center flex items-center justify-center cursor-pointer text-sm"
+                >
+                  <span>Batalkan Pesanan</span>
+                </button>
+              </form>
             </div>
           ) : (
             <p className="text-rose-500 font-semibold text-sm">
               Token pembayaran tidak ditemukan. Silakan hubungi admin.
             </p>
           )}
-
-          {/* Manual Proof of Payment Upload */}
-          <div className="mt-8 pt-8 border-t border-slate-100">
-            <h4 className="font-bold text-slate-800 mb-4 text-xs uppercase tracking-wide">
-              Konfirmasi Transfer Manual
-            </h4>
-            <form action={handleUploadProof} className="space-y-4">
-              <div>
-                <label className="block text-slate-500 font-medium text-xs mb-1.5">
-                  Link / URL Gambar Bukti Pembayaran
-                </label>
-                <input
-                  type="url"
-                  name="proof_url"
-                  required
-                  placeholder="https://example.com/bukti-bayar.png"
-                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-xs focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition"
-                />
-              </div>
-              <button
-                type="submit"
-                className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-6 rounded-xl transition text-xs cursor-pointer flex items-center gap-1.5"
-              >
-                <i className="fas fa-upload"></i>
-                <span>Kirim Bukti Pembayaran</span>
-              </button>
-            </form>
-          </div>
         </div>
       )}
 

@@ -17,6 +17,8 @@ interface CatalogProps {
     max_harga?: string;
     sort?: string;
     search?: string;
+    success?: string;
+    info?: string;
   }>;
 }
 
@@ -27,6 +29,8 @@ export default async function CatalogPage({ searchParams }: CatalogProps) {
   const max_harga = filters.max_harga || '';
   const sort = filters.sort || 'terbaru';
   const search = filters.search || '';
+  const success = filters.success || '';
+  const info = filters.info || '';
 
   // Construct database query
   let query = supabase
@@ -84,12 +88,34 @@ export default async function CatalogPage({ searchParams }: CatalogProps) {
             Katalog Ternak Premium
           </h1>
           <p className="text-emerald-100 text-base font-light max-w-2xl">
-            Jelajahi dan temukan hewan ternak berkualitas tinggi untuk memenuhi standar terbaik peternakan atau bisnis Anda.
+            Jelajahi dan temukan hewan ternak berkualitas tinggi untuk memenuhi standar terbaik peternakan or bisnis Anda.
           </p>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {success === 'added_to_cart' && (
+          <div className="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl flex items-center justify-between shadow-sm animate-fade-in relative z-30">
+            <div className="flex items-center gap-3">
+              <i className="fas fa-check-circle text-emerald-600 text-lg"></i>
+              <p className="text-sm font-semibold">Hewan ternak berhasil ditambahkan ke keranjang!</p>
+            </div>
+            <Link href="/keranjang" className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-500/10">
+              Lihat Keranjang
+            </Link>
+          </div>
+        )}
+        {info === 'already_in_cart' && (
+          <div className="mb-6 bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl flex items-center justify-between shadow-sm animate-fade-in relative z-30">
+            <div className="flex items-center gap-3">
+              <i className="fas fa-info-circle text-amber-600 text-lg"></i>
+              <p className="text-sm font-semibold">Hewan ternak sudah ada di keranjang Anda.</p>
+            </div>
+            <Link href="/keranjang" className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-amber-500/10">
+              Lihat Keranjang
+            </Link>
+          </div>
+        )}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-10 relative z-20 -mt-16">
           <form action="/katalog" method="GET" className="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
             <div className="md:col-span-1">

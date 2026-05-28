@@ -36,7 +36,7 @@ export async function addToCartAction(productId: number) {
       .maybeSingle();
 
     if (existing) {
-      redirect('/keranjang');
+      return { success: false, alreadyInCart: true, error: 'Hewan ternak sudah ada di keranjang Anda.' };
     }
 
     // Insert into cart
@@ -53,14 +53,11 @@ export async function addToCartAction(productId: number) {
 
     revalidatePath('/layout');
     revalidatePath('/keranjang');
+    revalidatePath('/katalog');
+    return { success: true };
   } catch (err: any) {
-    if (err.message && err.message.includes('NEXT_REDIRECT')) {
-      throw err;
-    }
     return { success: false, error: err.message || 'Terjadi kesalahan.' };
   }
-
-  redirect('/keranjang');
 }
 
 export async function deleteFromCartAction(cartItemId: number) {
