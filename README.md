@@ -82,15 +82,15 @@ npm run dev
 ```
 
 Buka browser Anda dan akses halaman [http://localhost:3000](http://localhost:3000) untuk melihat hasilnya.
+atau buka https://kajuresortfarm.vercel.app untuk melihat hasil hostingannya.
 
 ---
 
 ## 👥 Anggota Kelompok 17 (Paralel 4)
 
-* **Bagas Hidayat N.S.** - *Fullstack Developer / Integrator*
-* **[Nama Anggota Lain]** - *Rekayasa Kebutuhan & Analisis*
-* **[Nama Anggota Lain]** - *Desain Antarmuka & UX*
-* **[Nama Anggota Lain]** - *Pengujian & Jaminan Kualitas*
+* **Bagas Heningswara** - *Fullstack Developer / Integrator*
+* **Aqilah Callysta Abygail Febyan** - *Rekayasa Kebutuhan & Analisis*
+* **Thogianna Anggitouli Metanoya Sinaga** - *Desain Antarmuka & UX*
 
 ---
 
