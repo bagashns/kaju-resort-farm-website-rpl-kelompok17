@@ -1,14 +1,14 @@
 # 🌿 Kaju Resort Farm - Platform Jual Beli Hewan Ternak Premium
 
-Selamat datang di repositori **Kaju Resort Farm**, sebuah platform e-commerce modern berbasis web yang dirancang khusus untuk mempermudah transaksi jual beli hewan ternak (seperti Sapi, Kambing, dan Domba) berkualitas unggul langsung dari peternakan Kaju Resort Farm.
+**Kaju Resort Farm**, sebuah platform e-commerce modern berbasis web yang dirancang khusus untuk mempermudah transaksi jual beli hewan ternak (seperti Sapi, Kambing, dan Domba) berkualitas unggul langsung dari peternakan Kaju Resort Farm. Website Kaju Resort Farm dapat dikunjungi melalui https://kajuresortfarm.vercel.app
 
 Proyek ini dibangun sebagai bagian dari tugas besar mata kuliah **Rekayasa Perangkat Lunak (RPL) - Kelompok 17 (Paralel 4)**.
 
 ---
 
-## ✨ Fitur Utama
+##  Fitur Utama
 
-### 🛒 Sisi Pelanggan (Customer)
+###  Sisi Pelanggan (Customer)
 * **Katalog Ternak Premium:** Pencarian interaktif dengan sistem filter cerdas berdasarkan kategori, rentang harga, pencarian teks, serta fitur pengurutan (harga terendah/tertinggi, terberat, terbaru).
 * **Detail Produk Mendalam:** Informasi spesifikasi hewan ternak yang komprehensif mulai dari bobot asli (Kg), umur, jenis kelamin, status kesehatan, deskripsi, hingga konsultasi instan via WhatsApp.
 * **Keranjang Belanja (Interactive Cart):** Proses tambah keranjang yang halus dengan efek animasi loading interaktif tanpa mengganggu kenyamanan navigasi katalog.
@@ -16,7 +16,7 @@ Proyek ini dibangun sebagai bagian dari tugas besar mata kuliah **Rekayasa Peran
 * **Riwayat Pesanan:** Pantau status transaksi secara real-time dari "Menunggu Pembayaran", "Lunas", "Sedang Dikirim", hingga "Selesai".
 * **Pembatalan Mandiri:** Pelanggan dapat membatalkan pesanan yang belum dibayar secara langsung, yang otomatis membebaskan kembali hewan ternak terkait agar tersedia di katalog.
 
-### 🛡️ Sisi Admin (Admin Panel)
+###  Sisi Admin (Admin Panel)
 * **Dashboard Statistik:** Ringkasan performa penjualan, total pengguna, jumlah produk, dan total pesanan.
 * **Manajemen Produk (CRUD):** Tambah, ubah, hapus, dan upload gambar hewan ternak dengan mudah.
 * **Manajemen Kategori:** Pengelolaan rumpun ternak yang dinamis.
@@ -25,7 +25,7 @@ Proyek ini dibangun sebagai bagian dari tugas besar mata kuliah **Rekayasa Peran
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+##  Teknologi yang Digunakan
 
 * **Framework Utama:** [Next.js (App Router)](https://nextjs.org/) & **TypeScript**
 * **Styling & UI:** [TailwindCSS](https://tailwindcss.com/) dengan pendekatan modern *glassmorphism* & harmoni warna hijau emerald.
@@ -35,7 +35,7 @@ Proyek ini dibangun sebagai bagian dari tugas besar mata kuliah **Rekayasa Peran
 
 ---
 
-## 🚀 Panduan Memulai (Getting Started)
+##  Panduan Memulai (Getting Started)
 
 Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di lingkungan lokal Anda.
 
