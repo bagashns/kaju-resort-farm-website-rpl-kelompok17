@@ -4,6 +4,7 @@ import { getSession } from '@/lib/session';
 import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
+import Chatbot from '@/components/Chatbot';
 
 export const metadata: Metadata = {
   title: 'Kaju Resort Farm - Platform Jual Beli Hewan Ternak',
@@ -40,6 +41,7 @@ export default async function RootLayout({
       </head>
       <body className="bg-[#f8fafc] text-slate-800 antialiased font-sans flex flex-col min-h-full">
         <Navbar user={user} cartCount={cartCount} />
+        <Chatbot />
 
         <main className="flex-grow w-full">
           {children}
