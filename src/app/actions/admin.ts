@@ -22,7 +22,38 @@ export async function addProductAction(formData: FormData) {
     const price = parseInt(formData.get('price') as string);
     const gender = formData.get('gender') as string || 'Jantan';
     const health_status = formData.get('health_status') as string || 'Sehat';
-    const image = formData.get('image') as string || '/images/default-product.jpg';
+    
+    // File upload handling
+    const imageFile = formData.get('image') as File | null;
+    let imageUrl = '/images/default-product.jpg';
+
+    if (imageFile && imageFile.size > 0) {
+      const fileExt = imageFile.name.split('.').pop() || 'jpg';
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+
+      // Memastikan bucket 'products' ada
+      await supabase.storage.createBucket('products', { public: true }).catch(() => {});
+
+      const arrayBuffer = await imageFile.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const { error: uploadError } = await supabase.storage
+        .from('products')
+        .upload(fileName, buffer, {
+          contentType: imageFile.type,
+          upsert: true,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('products')
+        .getPublicUrl(fileName);
+
+      imageUrl = publicUrl;
+    }
 
     const { error } = await supabase.from('products').insert({
       category_id,
@@ -33,7 +64,7 @@ export async function addProductAction(formData: FormData) {
       price,
       gender,
       health_status,
-      image,
+      image: imageUrl,
     });
 
     if (error) throw error;

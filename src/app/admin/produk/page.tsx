@@ -71,7 +71,7 @@ export default async function AdminProductsPage() {
           <h3 className="font-bold text-slate-800 text-lg mb-6 pb-3 border-b border-slate-100">
             Tambah Ternak Baru
           </h3>
-          <form action={handleAdd} className="space-y-4">
+          <form action={handleAdd} className="space-y-4" encType="multipart/form-data">
             <div>
               <label className="block text-slate-700 font-semibold text-xs uppercase tracking-wide mb-1.5">
                 Kategori
@@ -167,13 +167,14 @@ export default async function AdminProductsPage() {
             </div>
             <div>
               <label className="block text-slate-700 font-semibold text-xs uppercase tracking-wide mb-1.5">
-                URL Gambar Ternak
+                Gambar Ternak
               </label>
               <input
-                type="url"
+                type="file"
                 name="image"
-                placeholder="https://example.com/sapi.jpg"
-                className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition"
+                accept="image/*"
+                required
+                className="w-full border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition file:mr-4 file:py-1.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
               />
             </div>
             <div>
