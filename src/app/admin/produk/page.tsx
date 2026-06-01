@@ -71,7 +71,7 @@ export default async function AdminProductsPage() {
           <h3 className="font-bold text-slate-800 text-lg mb-6 pb-3 border-b border-slate-100">
             Tambah Ternak Baru
           </h3>
-          <form action={handleAdd} className="space-y-4" encType="multipart/form-data">
+          <form action={handleAdd} className="space-y-4">
             <div>
               <label className="block text-slate-700 font-semibold text-xs uppercase tracking-wide mb-1.5">
                 Kategori
