@@ -2,11 +2,11 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
 
-    if (!apiKey) {
+    if (!apiKey || apiKey === 'your_openai_api_key_here') {
       return NextResponse.json(
-        { error: 'API Key Gemini belum dikonfigurasi di server.' },
+        { error: 'API Key OpenAI belum dikonfigurasi di server.' },
         { status: 500 }
       );
     }
@@ -46,40 +46,35 @@ Informasi Penting Kaju Resort Farm:
   5. Pantau status pengiriman di halaman Pesanan (/pesanan).
 `;
 
-    // Map client messages to Gemini content format (convert 'assistant' role to 'model')
-    const formattedContents = messages.map((msg: { role: string; content: string }) => {
-      const role = msg.role === 'assistant' ? 'model' : 'user';
-      return {
-        role,
-        parts: [{ text: msg.content }],
-      };
-    });
-
-    const payload = {
-      contents: formattedContents,
-      systemInstruction: {
-        parts: [{ text: systemInstruction }],
-      },
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 1000,
-      },
-    };
+    // Map client messages to OpenAI chat format
+    const formattedMessages = [
+      { role: 'system', content: systemInstruction },
+      ...messages.map((msg: { role: string; content: string }) => ({
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
+        content: msg.content,
+      }))
+    ];
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`,
+      'https://api.openai.com/v1/chat/completions',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: formattedMessages,
+          temperature: 0.7,
+          max_tokens: 1000,
+        }),
       }
     );
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Gemini API Error:', errorData);
+      console.error('OpenAI API Error:', errorData);
       return NextResponse.json(
         { error: 'Terjadi kesalahan saat berkomunikasi dengan AI.' },
         { status: response.status }
@@ -87,7 +82,7 @@ Informasi Penting Kaju Resort Farm:
     }
 
     const data = await response.json();
-    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, saya tidak dapat memahami permintaan Anda saat ini.';
+    const replyText = data.choices?.[0]?.message?.content || 'Maaf, saya tidak dapat memahami permintaan Anda saat ini.';
 
     return NextResponse.json({ reply: replyText });
   } catch (error) {
